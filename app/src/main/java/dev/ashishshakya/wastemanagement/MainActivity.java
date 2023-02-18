@@ -3,52 +3,58 @@ package dev.ashishshakya.wastemanagement;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    ArrayAdapter adapter;
+    List<Item> itemList=new ArrayList<>();
+    final List<String> itemNameList=new ArrayList<>();
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((Button)findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DocumentReference docRef=FirebaseFirestore.getInstance().collection("waste-management-unchecked")
-                        .document("tshirt");
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot snapshot=task.getResult();
-                            Item item=new Item((HashMap<String, Object>) snapshot.get("cotton"));
-                            ((TextView)findViewById(R.id.txt)).append("\n"+item.toString());
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, "Item does not exist in database", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
+
+        listView=findViewById(R.id.listView);
+        setListView();
+        final ArrayAdapter adapter= new ArrayAdapter<>(this, R.layout.frame, itemNameList);
+        this.adapter=adapter;
+
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -61,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
         else{
             menuItem.setTitle("Log in");
         }
+
+        MenuItem search=menu.findItem(R.id.search);
+        SearchView searchView=(SearchView) search.getActionView();
+        searchView.setQueryHint("Item name");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s.trim());
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -96,5 +118,37 @@ public class MainActivity extends AppCompatActivity {
         else{
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    void setListView(){
+        CollectionReference colRef=FirebaseFirestore.getInstance().collection("waste-management");
+        colRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Item item=new Item(document.getData());
+                    item.setName(item.getName().substring(0,1).toUpperCase()+item.getName().substring(1));
+                    itemList.add(item);
+                    itemNameList.add(item.getName());
+                }
+                Collections.sort(itemList, (item, t1) -> item.getName().compareTo(t1.getName()));
+                Collections.sort(itemNameList);
+                adapter.notifyDataSetChanged();
+            }
+            else {
+                Toast.makeText(MainActivity.this, "Connect to internet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Bundle bundle=new Bundle();
+            Item item=itemList.get(i);
+            bundle.putString("name",item.getName());
+            bundle.putString("material",item.getMaterial());
+            bundle.putString("closestHub",item.getClosestHub());
+            bundle.putString("alternativeUse",item.getMethodToRecycle_alternativeUse());
+            bundle.putString("localResources",item.getLocalResourcesAvailable());
+            bundle.putBoolean("recycleable",item.isRecycleable());
+            startActivity(new Intent(MainActivity.this,ItemActivity.class).putExtras(bundle));
+        });
     }
 }

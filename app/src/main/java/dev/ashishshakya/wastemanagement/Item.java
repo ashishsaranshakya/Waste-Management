@@ -1,6 +1,7 @@
 package dev.ashishshakya.wastemanagement;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Item {
     private String name;
@@ -22,13 +23,24 @@ public class Item {
         this.localResourcesAvailable = localResourcesAvailable;
     }
 
-    public Item(HashMap<String,Object> map){
+    public Item(Map<String,Object> map){
         this.name = (String) map.get("name");
         this.material = (String) map.get("material");
         this.recycleable = (boolean) map.get("recycleable");
         this.closestHub = (String) map.get("closestHub");
         this.methodToRecycle_alternativeUse = (String) map.get("methodToRecycle_alternativeUse");
         this.localResourcesAvailable = (String) map.get("localResourcesAvailable");
+    }
+
+    public Map<String,Object> toMap(){
+        Map<String,Object> map=new HashMap<>();
+        map.put("name",name);
+        map.put("material",material);
+        map.put("closestHub",closestHub);
+        map.put("methodToRecycle_alternativeUse",methodToRecycle_alternativeUse);
+        map.put("localResourcesAvailable",localResourcesAvailable);
+        map.put("recycleable",recycleable);
+        return map;
     }
 
     public String getName() {

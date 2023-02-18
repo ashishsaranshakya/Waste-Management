@@ -15,6 +15,9 @@
         android:theme="@style/Theme.WasteManagement"
         tools:targetApi="31">
         <activity
+            android:name=".ItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".NewItemActivity"
             android:exported="false" />
         <activity

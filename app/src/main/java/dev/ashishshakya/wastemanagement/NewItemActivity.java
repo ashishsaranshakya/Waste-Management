@@ -40,32 +40,26 @@ public class NewItemActivity extends AppCompatActivity {
         recycleable=findViewById(R.id.recycleable);
         btnAddItem=findViewById(R.id.item_add);
 
-        btnAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String nameText=name.getText().toString().trim();
-                String materialText=material.getText().toString().trim();
-                String closestHubText=closestHub.getText().toString().trim();
-                String methodToRecycle_alternativeUseText=methodToRecycle_alternativeUse.getText().toString().trim();
-                String localResourcesAvailableText=localResourcesAvailable.getText().toString().trim();
-                boolean isRecycleable=recycleable.isChecked();
-                if(nameText.isEmpty()||materialText.isEmpty()||closestHubText.isEmpty()||
-                        methodToRecycle_alternativeUseText.isEmpty()||localResourcesAvailableText.isEmpty()){
-                    Toast.makeText(NewItemActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    FirebaseFirestore db=FirebaseFirestore.getInstance();
-                    Item newItem=new Item(nameText,materialText,closestHubText,methodToRecycle_alternativeUseText,localResourcesAvailableText,isRecycleable);
-                    db.collection("waste-management-unchecked")
-                            .document(nameText).set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(NewItemActivity.this, "Item submitted for evaluation", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(NewItemActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                    finish();
-                                }
-                            });
-                }
+        btnAddItem.setOnClickListener(view -> {
+            String nameText=name.getText().toString().trim();
+            String materialText=material.getText().toString().trim();
+            String closestHubText=closestHub.getText().toString().trim();
+            String methodToRecycle_alternativeUseText=methodToRecycle_alternativeUse.getText().toString().trim();
+            String localResourcesAvailableText=localResourcesAvailable.getText().toString().trim();
+            boolean isRecycleable=recycleable.isChecked();
+            if(nameText.isEmpty()||materialText.isEmpty()||closestHubText.isEmpty()||
+                    methodToRecycle_alternativeUseText.isEmpty()||localResourcesAvailableText.isEmpty()){
+                Toast.makeText(NewItemActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                FirebaseFirestore db=FirebaseFirestore.getInstance();
+                Item newItem=new Item(nameText,materialText,closestHubText,methodToRecycle_alternativeUseText,localResourcesAvailableText,isRecycleable);
+                db.collection("waste-management-unchecked")
+                        .document(nameText).set(newItem.toMap()).addOnCompleteListener(task -> {
+                            Toast.makeText(NewItemActivity.this, "Item submitted for evaluation", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(NewItemActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            finish();
+                        });
             }
         });
 
