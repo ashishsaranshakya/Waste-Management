@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewItemActivity">
+
+    <EditText
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Item name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginHorizontal="40dp"/>
+
+    <EditText
+        android:id="@+id/item_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Material" />
+
+    <EditText
+        android:id="@+id/item_closestHub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:hint="Closest hub for disposal"
+        android:layout_below="@+id/item_material"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:id="@+id/item_methodToRecycle_alternativeUse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:layout_below="@+id/item_closestHub"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:id="@+id/item_localResourcesAvailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Local resources available"
+        android:inputType="textMultiLine"
+        android:layout_below="@+id/item_methodToRecycle_alternativeUse"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp" />
+
+    <CheckBox
+        android:id="@+id/recycleable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recycleable"
+        android:layout_below="@+id/item_localResourcesAvailable"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="120dp"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/item_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recycleable"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="120dp"
+        android:layout_marginTop="20dp"
+        android:text="Add item" />
+
+
+</RelativeLayout>
