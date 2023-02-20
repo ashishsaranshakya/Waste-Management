@@ -10,17 +10,19 @@ public class Item {
     private String methodToRecycle_alternativeUse;
     private String localResourcesAvailable;
     private boolean recycleable;
+    private String imageUrl;
 
     public Item() {
     }
 
-    public Item(String name, String material, String closestHub, String methodToRecycle_alternativeUse, String localResourcesAvailable, boolean recycleable) {
+    public Item(String name, String material, String closestHub, String methodToRecycle_alternativeUse, String localResourcesAvailable, boolean recycleable,String imageUrl) {
         this.name = name;
         this.material = material;
         this.recycleable = recycleable;
         this.closestHub = closestHub;
         this.methodToRecycle_alternativeUse = methodToRecycle_alternativeUse;
         this.localResourcesAvailable = localResourcesAvailable;
+        this.imageUrl=imageUrl;
     }
 
     public Item(Map<String,Object> map){
@@ -30,6 +32,7 @@ public class Item {
         this.closestHub = (String) map.get("closestHub");
         this.methodToRecycle_alternativeUse = (String) map.get("methodToRecycle_alternativeUse");
         this.localResourcesAvailable = (String) map.get("localResourcesAvailable");
+        this.imageUrl=(String) map.get("imageUrl");
     }
 
     public Map<String,Object> toMap(){
@@ -40,7 +43,16 @@ public class Item {
         map.put("methodToRecycle_alternativeUse",methodToRecycle_alternativeUse);
         map.put("localResourcesAvailable",localResourcesAvailable);
         map.put("recycleable",recycleable);
+        map.put("imageUrl",imageUrl);
         return map;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {

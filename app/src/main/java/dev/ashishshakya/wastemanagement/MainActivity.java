@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString("alternativeUse",item.getMethodToRecycle_alternativeUse());
             bundle.putString("localResources",item.getLocalResourcesAvailable());
             bundle.putBoolean("recycleable",item.isRecycleable());
+            bundle.putString("imageUrl",item.getImageUrl());
             startActivity(new Intent(MainActivity.this,ItemActivity.class).putExtras(bundle));
         });
     }
