@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.WasteManagement.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@drawable/background</item>
+    </style>
+
+    <style name="BasicLayout" >
+        <item name="android:background">@drawable/background</item>
+    </style>
+
+    <style name="Widget.WasteManagement.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.DynamicColors.DayNight</item>
+    </style>
+
+    <style name="ImageView" >
+        <item name="android:background">@drawable/border</item>
+    </style>
+
+</resources>
