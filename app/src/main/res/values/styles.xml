@@ -2,11 +2,11 @@
 <resources>
 
     <style name="Widget.WasteManagement.TextView" parent="Widget.AppCompat.TextView">
-        <item name="android:background">@drawable/background</item>
+        <item name="android:background">@drawable/itemview_background</item>
     </style>
 
     <style name="BasicLayout" >
-        <item name="android:background">@drawable/background</item>
+        <item name="android:background">@drawable/itemview_background</item>
     </style>
 
     <style name="Widget.WasteManagement.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
@@ -15,6 +15,10 @@
 
     <style name="ImageView" >
         <item name="android:background">@drawable/border</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:background">@drawable/loginview_background</item>
     </style>
 
 </resources>

@@ -16,7 +16,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="100dp"
-        android:layout_marginHorizontal="40dp"/>
+        android:layout_marginHorizontal="20dp"
+        android:padding="10dp"
+        style="@style/EditText"/>
 
     <EditText
         android:id="@+id/item_material"
@@ -25,10 +27,12 @@
         android:layout_below="@+id/item_name"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="40dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Material" />
+        android:hint="Material"
+        android:padding="10dp"
+        style="@style/EditText"/>
 
     <EditText
         android:id="@+id/item_closestHub"
@@ -40,8 +44,10 @@
         android:layout_below="@+id/item_material"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        style="@style/EditText"/>
 
     <EditText
         android:id="@+id/item_methodToRecycle_alternativeUse"
@@ -52,8 +58,10 @@
         android:layout_below="@+id/item_closestHub"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        style="@style/EditText"/>
 
     <EditText
         android:id="@+id/item_localResourcesAvailable"
@@ -65,19 +73,22 @@
         android:layout_below="@+id/item_methodToRecycle_alternativeUse"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        style="@style/EditText"/>
 
     <CheckBox
         android:id="@+id/recycleable"
+        style="@style/ImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recycleable"
         android:layout_below="@+id/item_localResourcesAvailable"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="120dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginHorizontal="60dp"
+        android:layout_marginTop="20dp"
+        android:text="Recycleable" />
 
     <Button
         android:id="@+id/item_add"
@@ -86,24 +97,25 @@
         android:layout_below="@+id/add_image"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginHorizontal="120dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:text="Add item" />
+        android:text="Add item"
+        app:backgroundTint="#7E57C2"
+        style="@style/EditText"/>
 
 
     <Button
         android:id="@+id/add_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/item_localResourcesAvailable"
+        android:layout_below="@+id/recycleable"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
         android:text="Add image"
-        android:layout_marginHorizontal="120dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycleable" />
+        app:backgroundTint="#5C6BC0"
+        style="@style/EditText" />
 
 
 </RelativeLayout>

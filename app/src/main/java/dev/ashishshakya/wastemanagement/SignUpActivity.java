@@ -35,10 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Button btnSignUp;
     private Button btnSkip;
     private Button btnLogin;
-    private GoogleSignInClient googleSignInClient;
 
     private FirebaseAuth auth;
-    private SignInButton btnGoogle;
     private Bundle bundle;
 
     @Override
@@ -51,19 +49,16 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp=findViewById(R.id.sign_up);
         btnSkip=findViewById(R.id.skip);
         btnLogin=findViewById(R.id.login);
-        btnGoogle=findViewById(R.id.google);
         auth=FirebaseAuth.getInstance();
         bundle=getIntent().getExtras();
         if(bundle!=null) {
             boolean skipable = bundle.getBoolean("skipable", true);
-            Log.d("asdfg",""+skipable);
             if (!skipable) {
                 btnSkip.setVisibility(View.INVISIBLE);
             }
         }
         else{
             bundle=new Bundle();
-            Log.d("asdfg","asdfghj");
             bundle.putBoolean("new_data",false);
         }
 
@@ -87,66 +82,6 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(new Intent(SignUpActivity.this,LoginActivity.class).putExtras(bundle));
             finish();
         });
-
-//        BeginSignInRequest signInRequest = BeginSignInRequest.builder()
-//                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                        .setSupported(true)
-//                        // Your server's client ID, not your Android client ID.
-//                        .setServerClientId("113996174738290498732")
-//                        // Only show accounts previously used to sign in.
-//                        .setFilterByAuthorizedAccounts(true)
-//                        .build())
-//                .build();
-//
-//        btnGoogle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SignInCredential googleCredential = oneTapClient.getSignInCredentialFromIntent(data);
-//                String idToken = googleCredential.getGoogleIdToken();
-//                if (idToken !=  null) {
-//                    // Got an ID token from Google. Use it to authenticate
-//                    // with Firebase.
-//                    AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-//                    auth.signInWithCredential(firebaseCredential)
-//                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<AuthResult> task) {
-//                                    if (task.isSuccessful()) {
-//                                        // Sign in success, update UI with the signed-in user's information
-//                                        FirebaseUser user = auth.getCurrentUser();
-//                                        //updateUI(user);
-//                                    } else {
-//                                        // If sign in fails, display a message to the user.
-//                                        //Log.w("TAG", "signInWithCredential:failure", task.getException());
-//                                        //updateUI(null);
-//                                    }
-//                                }
-//                            });
-//                }
-//            }
-//        });
-
-//        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken("318253248681-dqkmfoss91d53o882loheo487fohdkek.apps.googleusercontent.com")
-//                .requestEmail()
-//                .build();
-//
-//        // Initialize sign in client
-//        googleSignInClient = GoogleSignIn.getClient(SignUpActivity.this, googleSignInOptions);
-//
-//        btnGoogle.setOnClickListener((View.OnClickListener) view -> {
-//            // Initialize sign in intent
-//            Intent intent = googleSignInClient.getSignInIntent();
-//            // Start activity for result
-//            startActivityForResult(intent, 100);
-//        });
-//
-//        FirebaseUser firebaseUser = auth.getCurrentUser();
-//        // Check condition
-//        if (firebaseUser != null) {
-//            // When user already sign in redirect to profile activity
-//            startActivity(new Intent(SignUpActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//        }
     }
 
     private void registerUser(String email, String password) {
