@@ -4,7 +4,9 @@ import static android.Manifest.permission.READ_MEDIA_IMAGES;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -14,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -40,7 +43,7 @@ public class NewItemActivity extends AppCompatActivity {
     Button btnAddItem;
     Button addImage;
     Uri imageUri;
-    private static final int IMAGE_REQUEST=2;
+    private static final int IMAGE_REQUEST=12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,25 +83,35 @@ public class NewItemActivity extends AppCompatActivity {
         });
 
         addImage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                12);
-
-                        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                        // app-defined int constant
-
-                        return;
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+//                            != PackageManager.PERMISSION_GRANTED) {
+//                        requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+//                                12);
+//
+//
+//
+//                        return;
+//                    }
+//                    else{
+//                        Intent intent=new Intent();
+//                        intent.setType("image/");
+//                        intent.setAction(Intent.ACTION_GET_CONTENT);
+//                        startActivityForResult(intent,IMAGE_REQUEST);
+//                    }
+//                }
+                try {
+                    if (ActivityCompat.checkSelfPermission(NewItemActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(NewItemActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
+                    } else {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(galleryIntent, 12);
                     }
-                    else{
-                        Intent intent=new Intent();
-                        intent.setType("image/");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(intent,IMAGE_REQUEST);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -110,25 +123,31 @@ public class NewItemActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode) {
+//            case 12: {
+//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    Intent intent=new Intent();
+//                    intent.setType("image/");
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    startActivityForResult(intent,IMAGE_REQUEST);
+//
+//                } else {
+//                    // permission denied, boo! Disable the
+//                }
+//                return;
+//            }
+//        }
         switch (requestCode) {
-            case 12: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Intent intent=new Intent();
-                    intent.setType("image/");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent,IMAGE_REQUEST);
-
+            case 12:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, 12);
                 } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
                 }
-                return;
-            }
-
-            // other 'switch' lines to check for other
-            // permissions this app might request
+                break;
         }
     }
 
