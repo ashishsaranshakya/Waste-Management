@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Waste Management</string>
+    <string name="app_name">WasteLess</string>
     <string name="title_activity_login2">LoginActivity2</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
