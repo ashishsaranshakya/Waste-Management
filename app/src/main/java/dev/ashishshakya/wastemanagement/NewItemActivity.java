@@ -1,7 +1,5 @@
 package dev.ashishshakya.wastemanagement;
 
-import static android.Manifest.permission.READ_MEDIA_IMAGES;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -9,15 +7,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -34,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class NewItemActivity extends AppCompatActivity {
+    private static final int IMAGE_REQUEST=12;
     EditText name;
     EditText material;
     EditText closestHub;
@@ -43,7 +42,14 @@ public class NewItemActivity extends AppCompatActivity {
     Button btnAddItem;
     Button addImage;
     Uri imageUri;
-    private static final int IMAGE_REQUEST=12;
+
+    String nameText;
+    String materialText;
+    String closestHubText;
+    String methodToRecycle_alternativeUseText;
+    String localResourcesAvailableText;
+    String imageUrl;
+    boolean isRecycleable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +65,37 @@ public class NewItemActivity extends AppCompatActivity {
         addImage=findViewById(R.id.add_image);
 
         btnAddItem.setOnClickListener(view -> {
-            String nameText=name.getText().toString().trim();
-            String materialText=material.getText().toString().trim();
-            String closestHubText=closestHub.getText().toString().trim();
-            String methodToRecycle_alternativeUseText=methodToRecycle_alternativeUse.getText().toString().trim();
-            String localResourcesAvailableText=localResourcesAvailable.getText().toString().trim();
-            String imageUrl="https://en.wikipedia.org/wiki/File:Wysypisko.jpg";
-            boolean isRecycleable=recycleable.isChecked();
+            nameText=name.getText().toString().trim();
+            materialText=material.getText().toString().trim();
+            closestHubText=closestHub.getText().toString().trim();
+            methodToRecycle_alternativeUseText=methodToRecycle_alternativeUse.getText().toString().trim();
+            localResourcesAvailableText=localResourcesAvailable.getText().toString().trim();
+            imageUrl="";
+            isRecycleable=recycleable.isChecked();
             if(nameText.isEmpty()||materialText.isEmpty()||closestHubText.isEmpty()||
                     methodToRecycle_alternativeUseText.isEmpty()||localResourcesAvailableText.isEmpty()){
                 Toast.makeText(NewItemActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
             }
             else{
-                FirebaseFirestore db=FirebaseFirestore.getInstance();
-                Item newItem=new Item(nameText,materialText,closestHubText,methodToRecycle_alternativeUseText,localResourcesAvailableText,isRecycleable,imageUrl);
-                db.collection("waste-management-unchecked")
-                        .document(nameText).set(newItem.toMap()).addOnCompleteListener(task -> {
-                            Toast.makeText(NewItemActivity.this, "Item submitted for evaluation", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(NewItemActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                            finish();
-                        });
+                if (imageUri==null){
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    uploadItem();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Upload without image?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                }else{
+                    uploadItem();
+                }
             }
         });
 
@@ -86,29 +103,12 @@ public class NewItemActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    if (checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-//                            != PackageManager.PERMISSION_GRANTED) {
-//                        requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE},
-//                                12);
-//
-//
-//
-//                        return;
-//                    }
-//                    else{
-//                        Intent intent=new Intent();
-//                        intent.setType("image/");
-//                        intent.setAction(Intent.ACTION_GET_CONTENT);
-//                        startActivityForResult(intent,IMAGE_REQUEST);
-//                    }
-//                }
                 try {
                     if (ActivityCompat.checkSelfPermission(NewItemActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(NewItemActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
+                        ActivityCompat.requestPermissions(NewItemActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, IMAGE_REQUEST);
                     } else {
                         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(galleryIntent, 12);
+                        startActivityForResult(galleryIntent, IMAGE_REQUEST);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -123,27 +123,12 @@ public class NewItemActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case 12: {
-//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                    Intent intent=new Intent();
-//                    intent.setType("image/");
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    startActivityForResult(intent,IMAGE_REQUEST);
-//
-//                } else {
-//                    // permission denied, boo! Disable the
-//                }
-//                return;
-//            }
-//        }
         switch (requestCode) {
-            case 12:
+            case IMAGE_REQUEST:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(galleryIntent, 12);
+                    startActivityForResult(galleryIntent, IMAGE_REQUEST);
                 } else {
                     //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
                 }
@@ -162,15 +147,14 @@ public class NewItemActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==IMAGE_REQUEST && resultCode==RESULT_OK){
             imageUri=data.getData();
-            uploadImage();
         }
     }
 
     void uploadImage(){
-        final ProgressDialog progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Uploading");
-        progressDialog.show();
         if(imageUri!=null){
+            final ProgressDialog progressDialog=new ProgressDialog(this);
+            progressDialog.setMessage("Uploading");
+            progressDialog.show();
             StorageReference fileRef= FirebaseStorage.getInstance().getReference()
                     .child("Upload").child(name.getText().toString().trim()+"."+getFileExt(imageUri));
             fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -179,13 +163,37 @@ public class NewItemActivity extends AppCompatActivity {
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            String url=uri.toString();
-                            progressDialog.dismiss();
-                            Toast.makeText(NewItemActivity.this, "Upload successfully", Toast.LENGTH_SHORT).show();
+                            updateUrl(uri,progressDialog);
                         }
                     });
                 }
             });
         }
+        else {
+            Toast.makeText(NewItemActivity.this, "Item submitted for evaluation", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(NewItemActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+        }
+    }
+
+    void uploadItem(){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        Item newItem=new Item(nameText,materialText,closestHubText,methodToRecycle_alternativeUseText,localResourcesAvailableText,isRecycleable,imageUrl);
+        db.collection("waste-management-unchecked")
+                .document(nameText).set(newItem.toMap()).addOnCompleteListener(task -> {
+                    uploadImage();
+                });
+    }
+
+    void updateUrl(Uri uri, ProgressDialog progressDialog){
+        String url=uri.toString();
+        progressDialog.dismiss();
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        db.collection("waste-management-unchecked")
+                .document(nameText).update("imageUrl",url).addOnCompleteListener(task -> {
+                    Toast.makeText(NewItemActivity.this, "Item submitted for evaluation", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(NewItemActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    finish();
+                });
     }
 }
