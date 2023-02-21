@@ -2,9 +2,9 @@
 
 An Android Application for Sustainable Waste Management
 
-|Updated Profile Menu|Home Screen|New Item Screen|Item Screen
+|Login Screen|Home Screen|New Item Screen|Item Screen|
 |:-:|:-:|:-:|:-:|
-|![Updated Profile Menu](https://user-images.githubusercontent.com/74979286/220435946-18d31b48-d174-4211-b833-daebb80c14fc.jpg)|![Home Screen](https://user-images.githubusercontent.com/74979286/220436908-a7520172-cd1a-4ee7-8138-7345744dd1bc.jpg)|![New Item Screen](https://user-images.githubusercontent.com/74979286/220436924-30d582cc-be23-47aa-b2dc-00db9fc080ee.jpg)|![Item Screen](https://user-images.githubusercontent.com/74979286/220438359-382ce722-ac79-4db6-a80e-554f5cdd3458.jpg)|
+|![Login Screen](https://user-images.githubusercontent.com/74979286/220435946-18d31b48-d174-4211-b833-daebb80c14fc.jpg)|![Home Screen](https://user-images.githubusercontent.com/74979286/220436908-a7520172-cd1a-4ee7-8138-7345744dd1bc.jpg)|![New Item Screen](https://user-images.githubusercontent.com/74979286/220436924-30d582cc-be23-47aa-b2dc-00db9fc080ee.jpg)|![Item Screen](https://user-images.githubusercontent.com/74979286/220438359-382ce722-ac79-4db6-a80e-554f5cdd3458.jpg)|
 
 ## Features
 
